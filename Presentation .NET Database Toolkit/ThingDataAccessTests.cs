@@ -2,6 +2,8 @@
 {
     using System.Linq;
 
+    using AutoMapper;
+
     using Xunit;
 
     public class ThingDataAccessTests
@@ -10,11 +12,12 @@
         public static void GetThingById_ValidId_ReturnsValidResut()
         {
             // arrange
-
-            var dataAccess = new ThingDataAccess("server=(local)\\SQLDEV2012;database=PresThing;Trusted_connection=True");
+            Mapper.CreateMap<ThingDatabaseObject, GetThingByIdQuery>();
+            Mapper.AssertConfigurationIsValid();
+            var getThingByIdQueryHandler = new GetThingByIdQueryHandler("server=(local)\\SQLDEV2012;database=PresThing;Trusted_connection=True");
 
             // act
-            var result = dataAccess.GetThingById(ThingDatabaseInitialMigration.SeedData.ThingId);
+            var result = getThingByIdQueryHandler.Handle(Mapper.Map<GetThingByIdQuery>(ThingDatabaseInitialMigration.SeedData));
 
             // assert
             Assert.Equal(ThingDatabaseInitialMigration.SeedData.ThingId, result.Id);

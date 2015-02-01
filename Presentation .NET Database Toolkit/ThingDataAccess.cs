@@ -6,30 +6,32 @@
 
     using Dapper;
 
+    using Spritely.Cqrs;
+
     using Xunit;
 
-    public interface IThingDataAccess
+    public class GetThingByIdQuery : IQuery<ThingDataAccessObject>
     {
-        ThingDataAccessObject GetThingById(int id);
+        public int ThingId { get; set; }
     }
 
-    public class ThingDataAccess : IThingDataAccess
+    public class GetThingByIdQueryHandler : IQueryHandler<GetThingByIdQuery, ThingDataAccessObject>
     {
-        private string connectionString;
+        private readonly string connectionString;
 
-        public ThingDataAccess(string connectionstring)
+        public GetThingByIdQueryHandler(string connectionstring)
         {
             this.connectionString = connectionstring;
         }
 
-        public ThingDataAccessObject GetThingById(int id)
+        public ThingDataAccessObject Handle(GetThingByIdQuery query)
         {
             ThingDataAccessObject ret = null;
             var sqlText = @"SELECT ThingId as [Id], 
                                   [Values] as [Values] 
                             FROM Thing 
-                            WHERE ThingId = @Id";
-            var sqlParams = new { Id = id };
+                            WHERE ThingId = @ThingId";
+
             using (IDbConnection connection = new SqlConnection(this.connectionString))
             {
                 connection.Open();
@@ -38,7 +40,7 @@
                 var command = connection.CreateCommand();
                 command.CommandType = CommandType.Text;
                 command.CommandText = sqlText;
-                command.Parameters.Add(new SqlParameter("Id", sqlParams.Id));
+                command.Parameters.Add(new SqlParameter("ThingId", query.ThingId));
                 using (var reader = command.ExecuteReader())
                 {
                     reader.Read();
@@ -53,7 +55,7 @@
 
                 // Dapper
                 ret = connection
-                        .Query<ThingDataAccessObject>(sqlText, sqlParams)
+                        .Query<ThingDataAccessObject>(sqlText, query)
                         .SingleOrDefault();
 
                 Assert.Equal(adoValues, ret.Values);

@@ -2,13 +2,17 @@
 {
     using AutoMapper;
 
+    using Spritely.Cqrs;
+
+    using Xunit;
+
     public class ThingWcfService
     {
-        private string connectionString;
+        private readonly IQueryHandler<GetThingByIdQuery, ThingDataAccessObject> getThingByIdQueryHandler;
 
-        public ThingWcfService(string connectionString)
+        public ThingWcfService(IQueryHandler<GetThingByIdQuery, ThingDataAccessObject> getThingByIdQueryHandler)
         {
-            this.connectionString = connectionString;
+            this.getThingByIdQueryHandler = getThingByIdQueryHandler;
             RunDiagnostics();
         }
 
@@ -20,12 +24,12 @@
 
         public ThingWcfObject GetThing(int id)
         {
-            var dao = new ThingDataAccess(this.connectionString).GetThingById(id);
+            var dao = this.getThingByIdQueryHandler.Handle(new GetThingByIdQuery() { ThingId = id });
 
             var extMethodRet = dao.ToThingWcfObject();
             var autoMapperRet = Mapper.Map<ThingWcfObject>(dao);
 
-            return null;
+            return autoMapperRet;
         }
 
     }

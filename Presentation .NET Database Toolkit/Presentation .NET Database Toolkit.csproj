@@ -48,6 +48,9 @@
     <Reference Include="FluentMigrator.Runner">
       <HintPath>..\packages\FluentMigrator.Runner.1.4.0.0\lib\40\FluentMigrator.Runner.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="Naos.Database.Migrator">
       <HintPath>..\packages\Naos.Database.Migrator.1.0.15\lib\45\Naos.Database.Migrator.dll</HintPath>
     </Reference>
@@ -62,6 +65,9 @@
     </Reference>
     <Reference Include="OBeautifulCode.Libs.String">
       <HintPath>..\packages\OBeautifulCode.Libs.String.1.0.5\lib\45\OBeautifulCode.Libs.String.dll</HintPath>
+    </Reference>
+    <Reference Include="Spritely.Cqrs">
+      <HintPath>..\packages\Spritely.Cqrs.0.1.0\lib\net45\Spritely.Cqrs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -84,6 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThingConversionExtensionMethods.cs" />
     <Compile Include="ThingWcfService.cs" />
+    <Compile Include="ThingWcfServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
